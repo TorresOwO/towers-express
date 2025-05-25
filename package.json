@@ -1,6 +1,6 @@
 {
   "name": "towers-express",
-  "version": "1.0.2a",
+  "version": "1.0.2b",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,7 @@
     "dev": "tsup --watch"
   },
   "author": "MrTowers",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Fast and simple express api creation with custom user's functions, built with TypeScript.",
   "keywords": [
     "express",
