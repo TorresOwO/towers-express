@@ -4,6 +4,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TorresOwO/towers-express"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup",
@@ -11,7 +15,14 @@
   },
   "author": "MrTowers",
   "license": "ISC",
-  "description": "",
+  "description": "Fast and simple express api creation with custom user's functions, built with TypeScript.",
+  "keywords": [
+    "express",
+    "typescript",
+    "api",
+    "towers",
+    "towers-express"
+  ],
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.15.21",
