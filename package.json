@@ -1,0 +1,27 @@
+{
+  "name": "towers-express",
+  "version": "1.0.1e",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "author": "MrTowers",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.15.21",
+    "ts-node": "^10.9.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/multer": "^1.4.12",
+    "express": "^4.17.1",
+    "multer": "^2.0.0"
+  }
+}
