@@ -15,18 +15,29 @@ interface RequestT extends Request {
 }
 type ResponseT = Response<any, Record<string, any>>;
 type BodyProperty = {
-    type: 'object' | 'string' | 'number' | 'boolean';
+    type: 'object' | 'string' | 'number' | 'boolean' | 'array' | 'file';
+    items?: BodyProperty;
     properties?: Record<string, BodyProperty>;
+    enum?: string[] | number[];
     required?: string[];
     default?: any;
+    additionalProperties?: boolean;
+    example?: any;
+    format?: string;
+    description?: string;
 };
 type TowersFunction = {
     method: (req: RequestT, res: ResponseT, user?: any) => Promise<any>;
     auth: boolean;
     maxFiles?: number;
     bodySchema?: BodyProperty;
+    description?: string;
+    tags?: string[];
     rights?: {
         [key: string]: string[];
+    };
+    responseSchema?: {
+        [key: string]: BodyProperty;
     };
 };
 type TowersExpressStartOptions = {

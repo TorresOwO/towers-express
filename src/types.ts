@@ -19,19 +19,29 @@ export interface RequestT extends Request {
 export type ResponseT = Response<any, Record<string, any>>;
 
 export type BodyProperty = {
-    type: 'object' | 'string' | 'number' | 'boolean';
+    type: 'object' | 'string' | 'number' | 'boolean' | 'array' | 'file';
+    items?: BodyProperty; // For arrays
     properties?: Record<string, BodyProperty>;
+    enum?: string[] | number[];
     required?: string[]
     default?: any;
+    additionalProperties?: boolean;
+    example?: any;
+    format?: string; // e.g., 'date-time', 'email', etc.
+    description?: string;
 }
-
 export type TowersFunction = {
     method: (req: RequestT, res: ResponseT, user?: any) => Promise<any>;
     auth: boolean;
     maxFiles?: number;
     bodySchema?: BodyProperty;
+    description?: string;
+    tags?: string[];
     rights?: {
         [key: string]: string[];
+    };
+    responseSchema?: {
+        [key: string]: BodyProperty;
     };
 }
 
