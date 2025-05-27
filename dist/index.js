@@ -149,6 +149,8 @@ var TowersExpress = class {
     this.app = express();
     this.functionsEndpoint = functionsEndpoint.startsWith("/") ? functionsEndpoint : `/${functionsEndpoint}`;
     this.port = port;
+    this.app.use(this.functionsEndpoint, routes_default);
+    console.log("functionsEndpoint: ", this.functionsEndpoint);
   }
   configureSSL(sslPort, sslFiles) {
     this.sslPort = sslPort;
@@ -172,7 +174,6 @@ var TowersExpress = class {
       res.header("Allow", "GET, POST");
       next();
     });
-    this.app.use(this.functionsEndpoint, routes_default);
     this.app.get("*", (req, res) => {
       res.sendStatus(404);
     });
