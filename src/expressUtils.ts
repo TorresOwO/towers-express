@@ -15,10 +15,21 @@ export class TowersExpress {
     private sslPort: number | undefined;
     private sslFiles: sslFileRoute | undefined;
 
-    constructor(functionsEndpoint: string, port: number) {
+    constructor(functionsEndpoint: string, port: number, allowOrigin: string = '*') {
         this.app = express();
         this.functionsEndpoint = functionsEndpoint.startsWith('/') ? functionsEndpoint : `/${functionsEndpoint}`;
         this.port = port;
+
+        
+        this.applyMiddleware(express.json());
+        this.applyMiddleware(express.urlencoded({ extended: true }));
+        this.applyMiddleware((req: Request, res: Response, next: NextFunction) => {
+            res.header('Access-Control-Allow-Origin', allowOrigin);
+            res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+            res.header('Access-Control-Allow-Methods', 'GET, POST');
+            res.header('Allow', 'GET, POST');
+            next();
+        });
 
         this.app.use(this.functionsEndpoint, router);
         console.log('functionsEndpoint: ', this.functionsEndpoint);
@@ -34,19 +45,9 @@ export class TowersExpress {
      * @param allowOrigin - The allowed origin for CORS. Default is '*'.
      */
     public start({
-        allowOrigin = '*',
         onHttpsStart,
         onHttpStart
     }: TowersExpressStartOptions) {
-        this.applyMiddleware(express.json());
-        this.applyMiddleware(express.urlencoded({ extended: true }));
-        this.applyMiddleware((req: Request, res: Response, next: NextFunction) => {
-            res.header('Access-Control-Allow-Origin', allowOrigin);
-            res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-            res.header('Access-Control-Allow-Methods', 'GET, POST');
-            res.header('Allow', 'GET, POST');
-            next();
-        });
 
         this.app.get('*', (req: Request, res: Response) => {
             res.sendStatus(404);

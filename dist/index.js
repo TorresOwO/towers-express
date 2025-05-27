@@ -114,7 +114,7 @@ import { createServer as createHttps } from "https";
 import { createServer as createHttp } from "http";
 import fs from "fs";
 var TowersExpress = class {
-  constructor(functionsEndpoint, port) {
+  constructor(functionsEndpoint, port, allowOrigin = "*") {
     this.openHttpServer = (onStart) => {
       this.httpServer = createHttp(this.app);
       if (onStart) {
@@ -149,6 +149,15 @@ var TowersExpress = class {
     this.app = express();
     this.functionsEndpoint = functionsEndpoint.startsWith("/") ? functionsEndpoint : `/${functionsEndpoint}`;
     this.port = port;
+    this.applyMiddleware(express.json());
+    this.applyMiddleware(express.urlencoded({ extended: true }));
+    this.applyMiddleware((req, res, next) => {
+      res.header("Access-Control-Allow-Origin", allowOrigin);
+      res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method");
+      res.header("Access-Control-Allow-Methods", "GET, POST");
+      res.header("Allow", "GET, POST");
+      next();
+    });
     this.app.use(this.functionsEndpoint, routes_default);
     console.log("functionsEndpoint: ", this.functionsEndpoint);
   }
@@ -161,19 +170,9 @@ var TowersExpress = class {
    * @param allowOrigin - The allowed origin for CORS. Default is '*'.
    */
   start({
-    allowOrigin = "*",
     onHttpsStart,
     onHttpStart
   }) {
-    this.applyMiddleware(express.json());
-    this.applyMiddleware(express.urlencoded({ extended: true }));
-    this.applyMiddleware((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", allowOrigin);
-      res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method");
-      res.header("Access-Control-Allow-Methods", "GET, POST");
-      res.header("Allow", "GET, POST");
-      next();
-    });
     this.app.get("*", (req, res) => {
       res.sendStatus(404);
     });

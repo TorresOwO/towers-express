@@ -54,13 +54,13 @@ declare class TowersExpress {
     private port;
     private sslPort;
     private sslFiles;
-    constructor(functionsEndpoint: string, port: number);
+    constructor(functionsEndpoint: string, port: number, allowOrigin?: string);
     configureSSL(sslPort: number, sslFiles: sslFileRoute): void;
     /**
      * Starts the Express server.
      * @param allowOrigin - The allowed origin for CORS. Default is '*'.
      */
-    start({ allowOrigin, onHttpsStart, onHttpStart }: TowersExpressStartOptions): void;
+    start({ onHttpsStart, onHttpStart }: TowersExpressStartOptions): void;
     applyMiddleware(...args: any[]): void;
     private openHttpServer;
     private openSSLServer;
