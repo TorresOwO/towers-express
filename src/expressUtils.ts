@@ -19,6 +19,9 @@ export class TowersExpress {
         this.app = express();
         this.functionsEndpoint = functionsEndpoint.startsWith('/') ? functionsEndpoint : `/${functionsEndpoint}`;
         this.port = port;
+
+        this.app.use(this.functionsEndpoint, router);
+        console.log('functionsEndpoint: ', this.functionsEndpoint);
     }
 
     public configureSSL(sslPort: number, sslFiles: sslFileRoute) {
@@ -44,8 +47,6 @@ export class TowersExpress {
             res.header('Allow', 'GET, POST');
             next();
         });
-
-        this.app.use(this.functionsEndpoint, router);
 
         this.app.get('*', (req: Request, res: Response) => {
             res.sendStatus(404);
