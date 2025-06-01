@@ -15,16 +15,23 @@ export class TowersExpress {
     private sslPort: number | undefined;
     private sslFiles: sslFileRoute | undefined;
 
-    constructor(functionsEndpoint: string, port: number, allowOrigin: string = '*') {
+    constructor(functionsEndpoint: string, port: number, options: {
+        allowOrigin?: string;
+        bodySizeLimit?: string;
+    } = {
+        allowOrigin: '*'
+    }) {
         this.app = express();
         this.functionsEndpoint = functionsEndpoint.startsWith('/') ? functionsEndpoint : `/${functionsEndpoint}`;
         this.port = port;
 
         
-        this.applyMiddleware(express.json());
+        this.applyMiddleware(express.json({
+            limit: options.bodySizeLimit || '100kb'
+        }));
         this.applyMiddleware(express.urlencoded({ extended: true }));
         this.applyMiddleware((req: Request, res: Response, next: NextFunction) => {
-            res.header('Access-Control-Allow-Origin', allowOrigin);
+            res.header('Access-Control-Allow-Origin', options.allowOrigin || '*');
             res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
             res.header('Access-Control-Allow-Methods', 'GET, POST');
             res.header('Allow', 'GET, POST');

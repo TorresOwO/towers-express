@@ -54,7 +54,10 @@ declare class TowersExpress {
     private port;
     private sslPort;
     private sslFiles;
-    constructor(functionsEndpoint: string, port: number, allowOrigin?: string);
+    constructor(functionsEndpoint: string, port: number, options?: {
+        allowOrigin?: string;
+        bodySizeLimit?: string;
+    });
     configureSSL(sslPort: number, sslFiles: sslFileRoute): void;
     /**
      * Starts the Express server.

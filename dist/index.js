@@ -114,7 +114,9 @@ import { createServer as createHttps } from "https";
 import { createServer as createHttp } from "http";
 import fs from "fs";
 var TowersExpress = class {
-  constructor(functionsEndpoint, port, allowOrigin = "*") {
+  constructor(functionsEndpoint, port, options = {
+    allowOrigin: "*"
+  }) {
     this.openHttpServer = (onStart) => {
       this.httpServer = createHttp(this.app);
       if (onStart) {
@@ -149,10 +151,12 @@ var TowersExpress = class {
     this.app = express();
     this.functionsEndpoint = functionsEndpoint.startsWith("/") ? functionsEndpoint : `/${functionsEndpoint}`;
     this.port = port;
-    this.applyMiddleware(express.json());
+    this.applyMiddleware(express.json({
+      limit: options.bodySizeLimit || "100kb"
+    }));
     this.applyMiddleware(express.urlencoded({ extended: true }));
     this.applyMiddleware((req, res, next) => {
-      res.header("Access-Control-Allow-Origin", allowOrigin);
+      res.header("Access-Control-Allow-Origin", options.allowOrigin || "*");
       res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method");
       res.header("Access-Control-Allow-Methods", "GET, POST");
       res.header("Allow", "GET, POST");
