@@ -6,6 +6,8 @@ export class TowersFunctionsController {
     private static overridedCheckRights = false;
     private static overridedAuthUser = false;
 
+    private static middlewares: ((name: string, funct: TowersFunction, user: any) => void)[] = [];
+
     private static checkRights = async (user: any, rights: TowersFunction['rights'], req: RequestT): Promise<string | undefined> => {
         return undefined;
     }
@@ -13,6 +15,16 @@ export class TowersFunctionsController {
     private static authUser = async (req: RequestT): Promise<any> => {
         return undefined; // Default implementation, should be overridden
     }
+
+    /**
+     * Adds a middleware function that will be applied when a function is called.
+     * The middleware receives the function and its name as arguments and can modify it or perform actions before the function is executed.
+     * @param middleware Middleware function to add.
+     */
+    public static addFunctionMiddleware(middleware: (name: string, funct: TowersFunction, user: any) => void) {
+        this.middlewares.push(middleware);
+    }
+
 
     /**
      * 
@@ -67,6 +79,11 @@ export class TowersFunctionsController {
             console.warn(`Using default auth user function for function ${name}. Consider overriding it for custom behavior.`);
         }
         user = await this.authUser(req);
+
+        // Apply middlewares to the function
+        for (const middleware of this.middlewares) {
+            middleware(name, func, user);
+        }
         
         if (func.auth) {
             if (!user) {

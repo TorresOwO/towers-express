@@ -8,6 +8,14 @@ import multer from "multer";
 // src/functionsController.ts
 var TowersFunctionsController = class {
   /**
+   * Adds a middleware function that will be applied when a function is called.
+   * The middleware receives the function and its name as arguments and can modify it or perform actions before the function is executed.
+   * @param middleware Middleware function to add.
+   */
+  static addFunctionMiddleware(middleware) {
+    this.middlewares.push(middleware);
+  }
+  /**
    * 
    * @param func Function to check user rights.
    * This function should return a string with error message if rights are not sufficient, or undefined if rights are sufficient.
@@ -54,6 +62,9 @@ var TowersFunctionsController = class {
       console.warn(`Using default auth user function for function ${name}. Consider overriding it for custom behavior.`);
     }
     user = await this.authUser(req);
+    for (const middleware of this.middlewares) {
+      middleware(name, func, user);
+    }
     if (func.auth) {
       if (!user) {
         res.status(401).send({ error: "Unauthorized" });
@@ -77,6 +88,7 @@ var TowersFunctionsController = class {
 TowersFunctionsController.functions = {};
 TowersFunctionsController.overridedCheckRights = false;
 TowersFunctionsController.overridedAuthUser = false;
+TowersFunctionsController.middlewares = [];
 TowersFunctionsController.checkRights = async (user, rights, req) => {
   return void 0;
 };

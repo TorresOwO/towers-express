@@ -73,8 +73,15 @@ declare class TowersFunctionsController {
     private static functions;
     private static overridedCheckRights;
     private static overridedAuthUser;
+    private static middlewares;
     private static checkRights;
     private static authUser;
+    /**
+     * Adds a middleware function that will be applied when a function is called.
+     * The middleware receives the function and its name as arguments and can modify it or perform actions before the function is executed.
+     * @param middleware Middleware function to add.
+     */
+    static addFunctionMiddleware(middleware: (name: string, funct: TowersFunction, user: any) => void): void;
     /**
      *
      * @param func Function to check user rights.
